@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCNA Notes — Routing and Switching</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#e8eef0;--paper:#fff;--ink:#16232e;--muted:#5b6b78;--ac:#0e7490;--ac2:#e0f1f5;--wn:#b45309;--wn2:#fff3df;--code:#0f1c26;--line:#d3dde2}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1519;--paper:#161f26;--ink:#e3ebef;--muted:#93a4af;--ac:#4fc3dc;--ac2:#17303a;--wn:#f5b25c;--wn2:#2c2314;--code:#0a1116;--line:#2a3943}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,"Segoe UI",system-ui,Arial,sans-serif;line-height:1.75;background:var(--bg);color:var(--ink);margin:0}
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;max-width:1180px;margin:0 auto;padding:24px 16px}
+#toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 8px;font-size:.88rem}
+#toc b{display:block;padding:0 10px 6px;color:var(--muted);font-weight:600}
+#toc a{display:block;padding:3px 10px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.7;border-left:3px solid transparent}
+#toc a:hover{background:var(--ac2)}
+#toc a.on{background:var(--ac2);border-left-color:var(--ac);font-weight:600}
+.container{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:40px clamp(18px,4vw,48px);min-width:0}
+h1{font-size:2rem;font-weight:800;margin:0 0 6px;line-height:1.5}
+.lead{color:var(--muted);margin:0 0 10px;padding-bottom:18px;border-bottom:3px solid var(--ac)}
+h2{font-size:1.45rem;color:var(--ac);margin:2.6em 0 .6em;padding-bottom:.3em;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+h3{font-size:1.08rem;margin:1.7em 0 .3em;color:var(--ink)}
+h3::before{content:"";display:inline-block;width:8px;height:8px;margin-inline-end:8px;background:var(--ac);border-radius:2px}
+hr{display:none}
+p,li{max-width:78ch}
+ul,ol{padding-inline-start:1.6em}
+pre{position:relative;direction:ltr;text-align:left;background:var(--code);color:#dbe6ec;padding:16px 18px;border-radius:8px;overflow:auto;font-size:.86rem;line-height:1.65;margin:12px 0}
+code{font-family:"JetBrains Mono",Consolas,monospace}
+:not(pre)>code{background:var(--ac2);padding:1px 6px;border-radius:4px;font-size:.88em;direction:ltr;unicode-bidi:embed}
+.copy{position:absolute;top:8px;right:8px;font:inherit;font-size:.72rem;padding:2px 10px;border-radius:5px;border:1px solid #3a4d5a;background:#1b2b36;color:#b9cad4;cursor:pointer;opacity:.0;transition:opacity .15s}
+pre:hover .copy,.copy:focus-visible{opacity:1}
+table{display:block;overflow-x:auto;width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+th{background:var(--ac2);color:var(--ac)}
+tr:nth-child(even) td{background:color-mix(in srgb,var(--ac2) 35%,transparent)}
+td:first-child{font-weight:600}
+.note,.warn{padding:10px 16px;margin:16px 0;border-radius:0 8px 8px 0;border-left:4px solid var(--ac);background:var(--ac2)}
+.warn{border-left-color:var(--wn);background:var(--wn2)}
+.ltr{direction:ltr;text-align:left}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}#toc{position:static;max-height:none;columns:2}#toc b{column-span:all}}
+@media print{body{background:#fff}#toc,.copy{display:none}.wrap{display:block;padding:0}.container{border:0;padding:0}pre{white-space:pre-wrap;break-inside:avoid}}
+.part{margin:3.2em 0 0;padding:8px 16px;background:var(--ac);color:var(--paper);border-radius:8px;font-weight:800}
+.part+h2{margin-top:1em}
+#toc i{display:block;font-style:normal;color:var(--muted);font-weight:600;font-size:.78rem;padding:10px 10px 2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav id="toc" aria-label="Contents"><b>Contents</b><i>Part 1 — Fundamentals and Device Management</i><a href="#s1">1. Common Commands and CLI Modes</a><a href="#s2">2. Basic Hardening and Management Services</a><a href="#s3">3. Enabling SSH on Cisco</a><a href="#s4">4. Upgrading IOS via TFTP</a><a href="#s5">5. Resetting the Switch (Erasing the Config)</a><i>Part 2 — Switching</i><a href="#s6">6. VLAN, Trunk and Inter-VLAN</a><a href="#s7">7. STP — Election Rules</a><a href="#s8">8. STP — Extras (RSTP, PortFast, BPDU Guard)</a><a href="#s9">9. EtherChannel</a><a href="#s10">10. PoE (Power over Ethernet)</a><i>Part 3 — Routing</i><a href="#s11">11. Static Route</a><a href="#s12">12. Administrative Distance and Route Selection</a><a href="#s13">13. OSPF at CCNA Level</a><a href="#s14">14. OSPF — Extras (DR/BDR, Cost, Passive)</a><a href="#s15">15. Default Route and Advertising it in OSPF</a><a href="#s16">16. EIGRP at CCNA Level</a><i>Part 4 — IP Services (DHCP, ACL, NAT)</i><a href="#s17">17. DHCP on a Cisco Router</a><a href="#s18">18. ACL at CCNA Level</a><a href="#s19">19. NAT at CCNA Level</a><i>Part 5 — Redundancy and WAN</i><a href="#s20">20. FHRP — HSRP</a><a href="#s21">21. GRE Tunnel at CCNA Level</a><i>Part 6 — Security</i><a href="#s22">22. Port Security</a><a href="#s23">23. Layer 2 Security (DHCP Snooping and DAI)</a><a href="#s24">24. AAA</a><a href="#s25">Quick CCNA Summary</a></nav>
+<div class="container">
+
+<h1>CCNA Summary Notes</h1>
+<p class="lead">Configs, tables and memory aids for Routing and Switching, in learning order</p>
+
+<div class="part">Part 1 — Fundamentals and Device Management</div>
+<h2 id="s1">1. Common Commands and CLI Modes</h2>
+<table>
+<tr><th>Mode</th><th>Prompt</th><th>Enter / Exit</th></tr>
+<tr><td>User EXEC</td><td class="ltr">Switch&gt;</td><td><code>enable</code> / <code>exit</code></td></tr>
+<tr><td>Privileged EXEC</td><td class="ltr">Switch#</td><td><code>configure terminal</code> / <code>disable</code></td></tr>
+<tr><td>Global Config</td><td class="ltr">Switch(config)#</td><td><code>exit</code> or <code>end</code></td></tr>
+<tr><td>Interface Config</td><td class="ltr">Switch(config-if)#</td><td><code>interface g0/1</code></td></tr>
+<tr><td>Line Config</td><td class="ltr">Switch(config-line)#</td><td><code>line vty 0 15</code></td></tr>
+</table>
+<h3>Show commands</h3>
+<pre><code>show running-config
+show startup-config
+show version
+show ip interface brief
+show interfaces status
+show interfaces g0/1
+show mac address-table
+show arp
+show ip route
+show vlan brief
+show cdp neighbors
+show logging
+show clock
+show history</code></pre>
+<h3>Interface configuration</h3>
+<pre><code>interface range fa0/1 - 24
+ description To-Users
+ speed 100
+ duplex full
+ shutdown
+ no shutdown</code></pre>
+<h3>Saving and erasing</h3>
+<pre><code>write memory
+copy running-config startup-config
+write erase
+erase startup-config
+clear counters
+reload</code></pre>
+<h3>CLI tricks</h3>
+<pre><code>show running-config | section ospf
+show running-config | include ip route
+show running-config | begin interface
+show running-config | exclude !
+
+do show ip interface brief     ! inside Config Mode
+terminal length 0              ! disable --More--
+no ip route 192.168.2.0 255.255.255.0 10.0.0.2   ! remove with no</code></pre>
+<p>The <b>?</b> key shows command help, <b>Tab</b> auto-completes, <b>Ctrl+Z</b> is the same as <code>end</code>, and <b>!</b> starts a comment. Commands can be abbreviated (for example <code>conf t</code> and <code>sh ip int br</code>).</p>
+<h3>Interface status</h3>
+<table>
+<tr><th>Status / Protocol</th><th>Meaning</th></tr>
+<tr><td>administratively down / down</td><td>Port was shut down with <code>shutdown</code></td></tr>
+<tr><td>down / down</td><td>Physical problem: cable, the far end, or Speed/Duplex</td></tr>
+<tr><td>up / down</td><td>Layer 2 problem: Encapsulation, Keepalive or Clock Rate</td></tr>
+<tr><td>up / up</td><td>Healthy</td></tr>
+<tr><td>err-disabled</td><td>Port was closed by Port Security, BPDU Guard, and similar features</td></tr>
+</table>
+<div class="note"><b>Fixing Err-Disabled:</b> fix the cause first, then run <code>shutdown</code> and <code>no shutdown</code> on the port.</div>
+
+<h2 id="s2">2. Basic Hardening and Management Services</h2>
+<pre><code>enable secret MyPass123
+service password-encryption
+security passwords min-length 10
+no ip domain-lookup
+banner motd # Authorized Access Only #
+
+line console 0
+ login local
+ logging synchronous
+ exec-timeout 5 0</code></pre>
+<p><code>enable secret</code> is stored with a strong hash; <code>service password-encryption</code> is only Type 7 and is easily decoded.</p>
+<table>
+<tr><th>Service</th><th>Note</th></tr>
+<tr><td>CDP</td><td>Cisco-proprietary, on by default; <code>show cdp neighbors detail</code>, turn it off with <code>no cdp run</code></td></tr>
+<tr><td>LLDP</td><td>IEEE 802.1AB standard, off by default; <code>lldp run</code></td></tr>
+<tr><td>NTP</td><td>UDP 123, <code>ntp server 10.0.0.5</code>, verify with <code>show ntp status</code></td></tr>
+<tr><td>Syslog</td><td>UDP 514, <code>logging host 10.0.0.6</code></td></tr>
+<tr><td>SNMP</td><td>v1/v2c use a Community String; v3 adds Authentication and Encryption</td></tr>
+</table>
+<div class="note"><b>Syslog severity levels (0 to 7):</b> Emergency → Alert → Critical → Error → Warning → Notice → Informational → Debug</div>
+
+<h2 id="s3">3. Enabling SSH on Cisco</h2>
+<pre><code>enable
+configure terminal
+
+hostname SW1
+ip domain-name local.local
+username admin privilege 15 secret Cisco@123
+
+crypto key generate rsa modulus 2048
+ip ssh version 2
+
+line vty 0 15
+ login local
+ transport input ssh
+ exit
+
+end
+write memory</code></pre>
+
+<h3>If the switch has no management IP</h3>
+<pre><code>configure terminal
+
+interface vlan 1
+ ip address 192.168.1.2 255.255.255.0
+ no shutdown
+exit
+
+ip default-gateway 192.168.1.1
+
+end
+write memory</code></pre>
+
+<p>Connecting from a PC:</p>
+<pre><code>ssh -l admin 192.168.1.2</code></pre>
+
+<p>Verification:</p>
+<pre><code>show ip ssh
+show running-config | section line vty</code></pre>
+
+<h2 id="s4">4. Upgrading IOS via TFTP</h2>
+<p>TFTP runs on UDP port 69. The PC running the TFTP Server (such as Tftpd64) must be in the same Subnet as the switch, the IOS file must sit in the server's Root folder, and the PC's Firewall must be off or allow the transfer.</p>
+<h3>1) Preparation and backup</h3>
+<pre><code>show version
+show flash:
+ping 192.168.1.100
+
+copy running-config tftp:
+copy flash:c2960-lanbasek9-mz.150-2.SE11.bin tftp:</code></pre>
+<p>In <code>show version</code> check the current version, and in <code>show flash:</code> check the free space; there must be enough room for the new image. If there isn't, delete the old image with <code>delete flash:file-name</code> (after taking a backup).</p>
+<h3>2) Copy the new image</h3>
+<pre><code>copy tftp: flash:
+Address or name of remote host []? 192.168.1.100
+Source filename []? c2960-lanbasek9-mz.152-7.E9.bin
+Destination filename [c2960-lanbasek9-mz.152-7.E9.bin]?   (Enter)
+
+verify /md5 flash:c2960-lanbasek9-mz.152-7.E9.bin</code></pre>
+<p>If the file is a <b>.tar</b>, use the following command instead of <code>copy</code>; it extracts and installs the image by itself:</p>
+<pre><code>archive download-sw /overwrite tftp://192.168.1.100/c2960-lanbasek9-tar.152-7.E9.tar</code></pre>
+<h3>3) Select the boot image and reload</h3>
+<pre><code>configure terminal
+boot system flash:c2960-lanbasek9-mz.152-7.E9.bin
+end
+write memory
+reload</code></pre>
+<h3>4) Verification</h3>
+<pre><code>show version
+show boot</code></pre>
+<div class="warn">Don't cut the power or the cable during the copy. Before the Reload, always compare the file's MD5 with the value on Cisco's site, and keep the previous image until you're sure the new one works.</div>
+<div class="note"><b>Memory aid:</b> backup → copy with <code>copy tftp: flash:</code> → <code>verify /md5</code> → <code>boot system</code> → <code>reload</code></div>
+
+<h2 id="s5">5. Resetting the Switch (Erasing the Config)</h2>
+<p>To return the switch to factory state, both the Startup-Config and the VLAN data must be erased.</p>
+<pre><code>enable
+write erase
+delete flash:vlan.dat
+reload</code></pre>
+<h3>Commands that erase the config (all three are equivalent)</h3>
+<pre><code>write erase
+erase startup-config
+erase nvram:
+
+Erasing the nvram filesystem will remove all configuration files! Continue? [confirm]</code></pre>
+<p>All three erase only the <b>Startup-Config</b>. VLAN data is stored separately in <code>vlan.dat</code> and is removed with <code>delete flash:vlan.dat</code>. On some platforms (such as routers), <code>erase /all nvram:</code> erases all NVRAM files.</p>
+<p>During the process:</p>
+<ul>
+<li><code>delete</code> asks for confirmation twice (the file name and the delete confirmation).</li>
+<li>During <code>reload</code>, if it asks “System configuration has been modified. Save?”, answer <b>no</b>; otherwise the current config is saved again.</li>
+<li>Then confirm the Reload.</li>
+</ul>
+<h3>Verification after boot</h3>
+<pre><code>show startup-config
+show vlan brief
+show running-config</code></pre>
+<p>You should see the message <b>startup-config is not present</b>, and only the default VLANs (1 and 1002–1005) should appear.</p>
+<div class="warn">Erasing the config does not change the Running-Config right away; all settings stay active until the Reload. Don't run <code>write memory</code> between <code>write erase</code> and <code>reload</code>.</div>
+<div class="note"><b>Memory aid:</b> <code>write erase</code> → <code>delete flash:vlan.dat</code> → <code>reload</code> (answer no to Save)</div>
+
+<div class="part">Part 2 — Switching</div>
+<h2 id="s6">6. VLAN, Trunk and Inter-VLAN</h2>
+<p>VLANs split the network at Layer 2 into separate Broadcast Domains, and each VLAN usually has its own Subnet.</p>
+<pre><code>vlan 10
+ name Sales
+interface fa0/2
+ switchport mode access
+ switchport access vlan 10
+
+interface g0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,99</code></pre>
+<p>The <code>switchport trunk encapsulation dot1q</code> command is only needed on switches that also support ISL. In 802.1Q, Native VLAN traffic is sent untagged.</p>
+<h3>Router-on-a-Stick</h3>
+<pre><code>interface g0/0
+ no shutdown
+interface g0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+interface g0/0.99
+ encapsulation dot1Q 99 native</code></pre>
+<h3>Layer 3 switch (SVI)</h3>
+<pre><code>ip routing
+interface vlan 10
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown</code></pre>
+<h3>Verification</h3>
+<pre><code>show vlan brief
+show interfaces trunk
+show interfaces g0/1 switchport</code></pre>
+<div class="warn">The Native VLAN must match on both ends of a Trunk; otherwise a mismatch warning appears and traffic ends up in the wrong VLAN.</div>
+
+<h2 id="s7">7. STP — Election Rules</h2>
+<h3>Root Bridge election</h3>
+<p>The lowest Bridge ID wins.</p>
+<p><b>Bridge ID = Priority + MAC Address</b></p>
+<p>So Priority is checked first and, if it's equal, the MAC.</p>
+
+<h3>Root Port election</h3>
+<ol>
+<li>Lowest Root Path Cost</li>
+<li>Lowest Sender Bridge ID</li>
+<li>Lowest Sender Port ID</li>
+</ol>
+
+<h3>Designated Port election</h3>
+<ol>
+<li>Lowest Root Path Cost</li>
+<li>Lowest Bridge ID</li>
+<li>Lowest Port ID</li>
+</ol>
+
+<div class="note"><b>Memory aid:</b> Root Bridge → Root Port → Designated Port → Blocked Port</div>
+<p>For the Root Bridge: <b>Priority ↓ → MAC ↓</b> (lower wins)</p>
+<p>The default STP Priority is usually <b>32768</b>.</p>
+
+<h2 id="s8">8. STP — Extras (RSTP, PortFast, BPDU Guard)</h2>
+<p>The real Bridge ID = <b>Priority + VLAN ID (Extended System ID) + MAC</b>; that's why the default Priority of VLAN 1 shows as 32769. Priority can only be a multiple of 4096.</p>
+<table>
+<tr><th>Link speed</th><th>STP Cost</th></tr>
+<tr><td>10 Mbps</td><td>100</td></tr>
+<tr><td>100 Mbps</td><td>19</td></tr>
+<tr><td>1 Gbps</td><td>4</td></tr>
+<tr><td>10 Gbps</td><td>2</td></tr>
+</table>
+<table>
+<tr><th>Version</th><th>Port states</th></tr>
+<tr><td>STP (802.1D)</td><td>Blocking → Listening → Learning → Forwarding (about 30 to 50 seconds)</td></tr>
+<tr><td>RSTP (802.1w)</td><td>Discarding / Learning / Forwarding; the Alternate and Backup port roles are added, and convergence is fast</td></tr>
+</table>
+<pre><code>spanning-tree mode rapid-pvst
+spanning-tree vlan 1 root primary
+spanning-tree vlan 1 priority 4096
+
+interface fa0/1
+ spanning-tree portfast
+ spanning-tree bpduguard enable</code></pre>
+<pre><code>show spanning-tree
+show spanning-tree vlan 1
+show spanning-tree summary</code></pre>
+<div class="note"><b>PortFast</b> is only for End Device ports. <b>BPDU Guard</b> puts a PortFast port into Err-Disabled when it receives a BPDU.</div>
+
+<h2 id="s9">9. EtherChannel</h2>
+<p>EtherChannel bundles several physical links into one logical link. Benefits: more bandwidth, Redundancy, and STP no longer blocks the extra links.</p>
+
+<table>
+<tr><th>Method</th><th>Protocol</th><th>Modes</th></tr>
+<tr><td>LACP</td><td>IEEE 802.3ad</td><td>active / passive</td></tr>
+<tr><td>PAgP</td><td>Cisco</td><td>desirable / auto</td></tr>
+<tr><td>Static</td><td>No protocol</td><td>on</td></tr>
+</table>
+
+<h3>LACP</h3>
+<pre><code>! SW1
+conf t
+interface range fa0/1 - 2
+ channel-group 1 mode active
+ exit
+interface port-channel 1
+ switchport mode trunk
+ exit</code></pre>
+
+<pre><code>! SW2
+conf t
+interface range fa0/1 - 2
+ channel-group 1 mode active
+ exit
+interface port-channel 1
+ switchport mode trunk
+ exit</code></pre>
+
+<p>LACP: active↔active or active↔passive. passive↔passive never forms.</p>
+
+<h3>PAgP</h3>
+<pre><code>interface range fa0/1 - 2
+ channel-group 1 mode desirable</code></pre>
+<p>PAgP: desirable↔desirable or desirable↔auto. auto↔auto never forms.</p>
+
+<h3>Static</h3>
+<pre><code>interface range fa0/1 - 2
+ channel-group 1 mode on</code></pre>
+
+<p>Member ports of an EtherChannel must have matching settings, such as Speed, Duplex, Access/Trunk, Native VLAN and Allowed VLANs.</p>
+
+<h3>Verification</h3>
+<pre><code>show etherchannel summary
+show interfaces port-channel 1
+show lacp neighbor</code></pre>
+
+<div class="note"><b>Memory aid:</b> LACP = active/passive | PAgP = desirable/auto | Static = on</div>
+
+<h2 id="s10">10. PoE (Power over Ethernet)</h2>
+<p>PoE delivers power to devices such as IP phones, Access Points and cameras over the same network cable. The switch is the <b>PSE</b> (power source) and the device is the <b>PD</b> (powered device). Only PoE models of the switch support this.</p>
+<table>
+<tr><th>Standard</th><th>Name</th><th>PSE output power</th></tr>
+<tr><td>802.3af</td><td>PoE</td><td>15.4 W</td></tr>
+<tr><td>802.3at</td><td>PoE+</td><td>30 W</td></tr>
+<tr><td>802.3bt</td><td>PoE++</td><td>60 W / 90 W</td></tr>
+<tr><td>Cisco UPOE</td><td>Proprietary</td><td>60 W</td></tr>
+</table>
+<h3>Configuration</h3>
+<pre><code>interface fa0/5
+ power inline auto
+ power inline auto max 15400
+ power inline static max 15400
+ power inline never</code></pre>
+<ul>
+<li><b>auto:</b> the default; the switch detects the PD and supplies power.</li>
+<li><b>static:</b> reserves power from the Budget for that port.</li>
+<li><b>never:</b> PoE is off on the port.</li>
+<li><b>max:</b> the port's power ceiling in milliwatts.</li>
+</ul>
+<h3>Verification</h3>
+<pre><code>show power inline
+show power inline fa0/5
+show power inline detail</code></pre>
+<p>The output of <code>show power inline</code> shows Admin (auto/off), Oper (on/off/faulty/power-deny), power drawn, device type and Class. The top of the table also shows the Available, Used and Remaining figures for the whole switch's Budget.</p>
+<div class="warn">If Oper is <b>power-deny</b>, the switch's Budget isn't enough. If it's <b>faulty</b>, the cable or the device itself has a problem.</div>
+<div class="note"><b>PoE stages:</b> Detection → Classification → Power-Up. The exact power draw is usually negotiated between the switch and the PD using CDP or LLDP-MED.</div>
+
+<div class="part">Part 3 — Routing</div>
+<h2 id="s11">11. Static Route</h2>
+<p>A Static Route means defining the path manually on the router.</p>
+
+<h3>Via Next-Hop</h3>
+<pre><code>ip route 192.168.2.0 255.255.255.0 10.0.0.2</code></pre>
+
+<h3>Via Interface</h3>
+<pre><code>ip route 192.168.2.0 255.255.255.0 g0/1</code></pre>
+
+<h3>Default Route</h3>
+<pre><code>ip route 0.0.0.0 0.0.0.0 10.0.0.2</code></pre>
+
+<p>This means any destination without a specific Route is sent to the Next-Hop.</p>
+
+<h3>Verification</h3>
+<pre><code>show ip route
+show running-config | include ip route</code></pre>
+
+<h3>Removal</h3>
+<pre><code>no ip route 192.168.2.0 255.255.255.0 10.0.0.2</code></pre>
+
+<h2 id="s12">12. Administrative Distance and Route Selection</h2>
+<table>
+<tr><th>Route source</th><th>AD</th></tr>
+<tr><td>Connected</td><td>0</td></tr>
+<tr><td>Static</td><td>1</td></tr>
+<tr><td>EIGRP internal</td><td>90</td></tr>
+<tr><td>OSPF</td><td>110</td></tr>
+<tr><td>RIP</td><td>120</td></tr>
+<tr><td>EIGRP external</td><td>170</td></tr>
+</table>
+<div class="note"><b>Selection order:</b> Longest Prefix Match → lowest AD → lowest Metric</div>
+<p>A Floating Static Route is a Static with a higher AD that only becomes active when the main Route disappears:</p>
+<pre><code>ip route 192.168.2.0 255.255.255.0 10.0.0.2 200</code></pre>
+
+<h2 id="s13">13. OSPF at CCNA Level</h2>
+<p>OSPF is a Dynamic Routing Protocol.</p>
+
+<h3>Setup</h3>
+<pre><code>router ospf 1
+ router-id 1.1.1.1
+ network 192.168.1.0 0.0.0.255 area 0
+ network 10.0.0.0 0.0.0.3 area 0</code></pre>
+
+<p>The number 1 is the Process ID and is not necessarily the Router ID.</p>
+
+<h3>Second router</h3>
+<pre><code>router ospf 1
+ router-id 2.2.2.2
+ network 192.168.2.0 0.0.0.255 area 0
+ network 10.0.0.0 0.0.0.3 area 0</code></pre>
+
+<h3>Verification</h3>
+<pre><code>show ip ospf neighbor
+show ip route ospf
+show ip ospf
+show ip protocols</code></pre>
+
+<p>A healthy Neighbor is normally in the <b>FULL</b> state. OSPF routes are shown with the letter <b>O</b>.</p>
+
+<h3>OSPF Message Types</h3>
+<table>
+<tr><th>No.</th><th>Message</th><th>Usage</th></tr>
+<tr><td>1</td><td>Hello</td><td>Discover and maintain Neighbors</td></tr>
+<tr><td>2</td><td>DBD</td><td>LSDB summary</td></tr>
+<tr><td>3</td><td>LSR</td><td>Request the needed LSAs</td></tr>
+<tr><td>4</td><td>LSU</td><td>Send LSAs</td></tr>
+<tr><td>5</td><td>LSAck</td><td>Acknowledge received LSAs</td></tr>
+</table>
+
+<div class="note"><b>Memory aid:</b> Hello → DBD → LSR → LSU → LSAck</div>
+
+<h3>Router ID selection</h3>
+<ol>
+<li>Manual Router-ID with <code>router-id x.x.x.x</code></li>
+<li>Highest IP on a Loopback</li>
+<li>If there's no Loopback, the highest IP on an active Interface</li>
+</ol>
+
+<h2 id="s14">14. OSPF — Extras (DR/BDR, Cost, Passive)</h2>
+<h3>Neighbor requirements</h3>
+<ul>
+<li>Same Area, Subnet/Mask, Hello/Dead Timers and MTU</li>
+<li>Unique Router ID and matching Authentication</li>
+</ul>
+<p>The default Timers on Broadcast and Point-to-Point networks are Hello 10 and Dead 40 seconds.</p>
+<h3>DR / BDR</h3>
+<p>On a Multi-Access network such as Ethernet, one DR and one BDR are elected. The criteria are the highest Priority (default 1), then the highest Router ID. The election is Non-Preemptive, and Priority = 0 never becomes DR. DROthers stay in the <b>2-Way</b> state with each other, which is normal.</p>
+<p>Addresses: <b>224.0.0.5</b> for all OSPF routers and <b>224.0.0.6</b> for DR/BDR.</p>
+<h3>Cost and useful commands</h3>
+<p>Cost = Reference Bandwidth ÷ Bandwidth (the default is 100 Mbps, so Fa and Gig both get Cost 1).</p>
+<pre><code>router ospf 1
+ auto-cost reference-bandwidth 1000
+ passive-interface g0/0
+
+interface g0/1
+ ip ospf priority 100
+ ip ospf network point-to-point
+ ip ospf cost 10</code></pre>
+<div class="note"><b>Neighbor state memory aid:</b> Down → Init → 2-Way → ExStart → Exchange → Loading → Full</div>
+
+<h2 id="s15">15. Default Route and Advertising it in OSPF</h2>
+<pre><code>ip route 0.0.0.0 0.0.0.0 10.0.0.2
+
+router ospf 1
+ default-information originate</code></pre>
+
+<p>To advertise a Default Route even when the router itself has no Default Route:</p>
+<pre><code>router ospf 1
+ default-information originate always</code></pre>
+
+<p>Verification:</p>
+<pre><code>show ip route</code></pre>
+
+<h2 id="s16">16. EIGRP at CCNA Level</h2>
+<p><b>EIGRP = Enhanced Interior Gateway Routing Protocol</b></p>
+<ul>
+<li>Advanced Distance Vector</li>
+<li>It uses DUAL.</li>
+<li>The main Metric is based on Bandwidth and Delay.</li>
+<li>Internal AD = 90</li>
+<li>External AD = 170</li>
+<li>Route Code = D</li>
+</ul>
+
+<h3>Setup</h3>
+<pre><code>router eigrp 100
+ network 192.168.1.0 0.0.0.255
+ network 10.0.0.0 0.0.0.3</code></pre>
+
+<p>The number 100 is the AS Number, and EIGRP routers must have the same AS to become Neighbors.</p>
+
+<h3>Verification</h3>
+<pre><code>show ip eigrp neighbors
+show ip route eigrp
+show ip eigrp topology</code></pre>
+
+<h3>Key concepts</h3>
+<ul>
+<li><b>Successor:</b> the best path</li>
+<li><b>Feasible Successor:</b> a loop-free backup path</li>
+<li><b>Feasible Distance (FD):</b> the best calculated Metric</li>
+<li><b>Reported Distance (RD):</b> the Metric advertised by the Neighbor</li>
+</ul>
+
+<div class="note"><b>DUAL:</b> Best Path → Successor | Backup Path → Feasible Successor</div>
+
+<h3>Message Types</h3>
+<table>
+<tr><th>Message</th><th>Usage</th></tr>
+<tr><td>Hello</td><td>Discover and maintain Neighbors</td></tr>
+<tr><td>Update</td><td>Send Route information</td></tr>
+<tr><td>Query</td><td>Ask Neighbors about a route</td></tr>
+<tr><td>Reply</td><td>Reply to a Query</td></tr>
+<tr><td>ACK</td><td>Acknowledge reliable messages</td></tr>
+</table>
+
+<div class="note"><b>Memory aid:</b> Hello → Update → Query → Reply → ACK</div>
+
+<h3>Default Route in EIGRP</h3>
+<pre><code>ip route 0.0.0.0 0.0.0.0 10.0.0.2
+
+router eigrp 100
+ redistribute static</code></pre>
+
+<h3>no auto-summary</h3>
+<pre><code>router eigrp 100
+ no auto-summary</code></pre>
+<p>This command reflects old EIGRP behavior. In newer IOS versions Auto-Summarization is normally off by default, so there's no need to add it to every config.</p>
+
+<div class="part">Part 4 — IP Services (DHCP, ACL, NAT)</div>
+<h2 id="s17">17. DHCP on a Cisco Router</h2>
+<p>Example for the network <b>192.168.10.0/24</b>:</p>
+<pre><code>enable
+configure terminal
+
+ip dhcp excluded-address 192.168.10.1 192.168.10.10
+
+ip dhcp pool LAN
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+ exit
+
+interface gigabitEthernet 0/0
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown
+ exit
+
+end
+write memory</code></pre>
+
+<p>Verification:</p>
+<pre><code>show ip dhcp binding
+show ip dhcp pool
+show running-config | include dhcp</code></pre>
+<h3>DHCP Relay</h3>
+<p>DHCP uses the <b>DORA</b> process: Discover → Offer → Request → Ack. Since Discover is a Broadcast, if the server is on a different Subnet the router must relay it:</p>
+<pre><code>interface g0/0
+ ip helper-address 10.0.0.10</code></pre>
+
+<h2 id="s18">18. ACL at CCNA Level</h2>
+<p><b>ACL = Access Control List</b></p>
+<p>Used to Permit/Deny traffic.</p>
+
+<h3>Standard ACL</h3>
+<p>Checks the Source IP only.</p>
+<pre><code>access-list 10 deny host 192.168.10.10
+access-list 10 permit any</code></pre>
+
+<h3>Extended ACL</h3>
+<p>Checks Source IP + Destination IP + Protocol + Port.</p>
+<p>Example: block HTTP from the VLAN 10 network to server 192.168.100.20:</p>
+<pre><code>access-list 100 deny tcp 192.168.10.0 0.0.0.255 host 192.168.100.20 eq 80
+access-list 100 permit ip any any</code></pre>
+
+<h3>Applying the ACL to an Interface</h3>
+<pre><code>interface g0/0
+ ip access-group 100 in</code></pre>
+
+<p><b>in:</b> traffic entering the Interface.</p>
+<p><b>out:</b> traffic leaving the Interface.</p>
+
+<h3>Named ACL</h3>
+<pre><code>ip access-list extended BLOCK-HTTP
+ deny tcp 192.168.10.0 0.0.0.255 host 192.168.100.20 eq 80
+ permit ip any any
+ exit
+
+interface g0/0
+ ip access-group BLOCK-HTTP in</code></pre>
+
+<h3>Important points</h3>
+<ul>
+<li>An ACL is checked from top to bottom.</li>
+<li>The first Rule that matches is applied.</li>
+<li>There's an <b>Implicit Deny</b> at the end of every ACL.</li>
+<li>Standard ACL → Source IP only</li>
+<li>Extended ACL → Source + Destination + Protocol + Port</li>
+</ul>
+
+<div class="note"><b>CCNA memory aid:</b> Standard near the destination, Extended near the source.</div>
+
+<h2 id="s19">19. NAT at CCNA Level</h2>
+<p><b>NAT = Network Address Translation</b></p>
+<p>Translating Private IPs to Public and vice versa.</p>
+
+<h3>NAT types</h3>
+<table>
+<tr><th>Type</th><th>Description</th></tr>
+<tr><td>Static NAT</td><td>One Private ↔ one Public</td></tr>
+<tr><td>Dynamic NAT</td><td>Private → a Pool of Public IPs</td></tr>
+<tr><td>PAT / NAT Overload</td><td>Many Private → one Public using Port Numbers</td></tr>
+</table>
+
+<h3>Static NAT</h3>
+<pre><code>interface g0/0
+ ip address 192.168.1.1 255.255.255.0
+ ip nat inside
+ no shutdown
+
+interface g0/1
+ ip address 203.0.113.1 255.255.255.0
+ ip nat outside
+ no shutdown
+
+ip nat inside source static 192.168.1.10 203.0.113.10</code></pre>
+
+<h3>Dynamic NAT</h3>
+<pre><code>access-list 1 permit 192.168.1.0 0.0.0.255
+
+ip nat pool PUBLIC 203.0.113.10 203.0.113.20 netmask 255.255.255.0
+
+ip nat inside source list 1 pool PUBLIC
+
+interface g0/0
+ ip nat inside
+
+interface g0/1
+ ip nat outside</code></pre>
+
+<h3>PAT</h3>
+<pre><code>access-list 1 permit 192.168.1.0 0.0.0.255
+
+interface g0/0
+ ip nat inside
+
+interface g0/1
+ ip nat outside
+
+ip nat inside source list 1 interface g0/1 overload</code></pre>
+
+<p><b>overload = PAT</b></p>
+
+<h3>Verifying NAT</h3>
+<pre><code>show ip nat translations
+show ip nat statistics
+clear ip nat translation *</code></pre>
+
+<div class="note"><b>Memory aid:</b> Static = 1:1 | Dynamic = Pool | PAT = Many-to-One + Port</div>
+
+<div class="part">Part 5 — Redundancy and WAN</div>
+<h2 id="s20">20. FHRP — HSRP</h2>
+<p>HSRP creates a virtual Gateway between two routers so clients aren't cut off when one fails. The router with the highest Priority (default 100) becomes <b>Active</b> and the other becomes <b>Standby</b>.</p>
+<pre><code>interface g0/0
+ ip address 192.168.1.2 255.255.255.0
+ standby 1 ip 192.168.1.1
+ standby 1 priority 110
+ standby 1 preempt</code></pre>
+<pre><code>show standby brief</code></pre>
+<p>Clients' Default Gateway must be the virtual IP (192.168.1.1). HSRP is Cisco-proprietary; <b>VRRP</b> is the open standard, and <b>GLBP</b> also does Load Balancing on top of Redundancy.</p>
+
+<h2 id="s21">21. GRE Tunnel at CCNA Level</h2>
+<p><b>GRE = Generic Routing Encapsulation</b></p>
+<p>GRE creates a logical Tunnel between two routers. GRE itself doesn't encrypt; for Encryption, GRE over IPsec is normally used.</p>
+
+<h3>Example</h3>
+<p>R1 WAN = 10.0.0.1, R2 WAN = 10.0.0.2, and the Tunnel IPs are 172.16.1.1 and 172.16.1.2.</p>
+
+<h3>R1</h3>
+<pre><code>conf t
+
+interface tunnel 0
+ ip address 172.16.1.1 255.255.255.252
+ tunnel source 10.0.0.1
+ tunnel destination 10.0.0.2
+ no shutdown</code></pre>
+
+<h3>R2</h3>
+<pre><code>conf t
+
+interface tunnel 0
+ ip address 172.16.1.2 255.255.255.252
+ tunnel source 10.0.0.2
+ tunnel destination 10.0.0.1
+ no shutdown</code></pre>
+
+<p>Test:</p>
+<pre><code>ping 172.16.1.2</code></pre>
+
+<h3>Running OSPF over GRE</h3>
+<pre><code>router ospf 1
+ network 172.16.1.0 0.0.0.3 area 0</code></pre>
+
+<h3>Verification</h3>
+<pre><code>show interface tunnel 0
+show ip interface brief</code></pre>
+
+<div class="note"><b>Memory aid:</b> GRE = Tunnel | IPsec = Encryption</div>
+
+<div class="part">Part 6 — Security</div>
+<h2 id="s22">22. Port Security</h2>
+<p>Port Security is enabled on Access ports so that only allowed MAC addresses can use the port.</p>
+
+<h3>Enabling</h3>
+<pre><code>interface fa0/1
+ switchport mode access
+ switchport port-security</code></pre>
+
+<h3>Maximum number of MACs</h3>
+<pre><code>switchport port-security maximum 1</code></pre>
+
+<h3>Static MAC</h3>
+<pre><code>switchport port-security mac-address aaaa.bbbb.cccc</code></pre>
+
+<h3>Sticky MAC</h3>
+<pre><code>switchport port-security mac-address sticky</code></pre>
+
+<h3>Violation Mode</h3>
+<table>
+<tr><th>Mode</th><th>Behavior</th></tr>
+<tr><td>Shutdown</td><td>Err-disables the port</td></tr>
+<tr><td>Restrict</td><td>Drops traffic from unauthorized MACs and logs the Violation</td></tr>
+<tr><td>Protect</td><td>Drops traffic from unauthorized MACs</td></tr>
+</table>
+
+<p>Full example:</p>
+<pre><code>interface fa0/1
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown</code></pre>
+
+<h3>Verification</h3>
+<pre><code>show port-security
+show port-security interface fa0/1
+show port-security address</code></pre>
+
+<div class="note"><b>Memory aid:</b> Access Port → Maximum MAC → Allowed MAC → Violation</div>
+
+<h2 id="s23">23. Layer 2 Security (DHCP Snooping and DAI)</h2>
+<p>These mechanisms on the switch block DHCP-based and ARP-based attacks.</p>
+<h3>DHCP Snooping</h3>
+<pre><code>ip dhcp snooping
+ip dhcp snooping vlan 10
+interface g0/1
+ ip dhcp snooping trust</code></pre>
+<p>Only a Trusted port (server side/Uplink) may send Offer and Ack; this stops a Rogue DHCP Server and builds the Binding Table.</p>
+<h3>Dynamic ARP Inspection</h3>
+<pre><code>ip arp inspection vlan 10
+interface g0/1
+ ip arp inspection trust</code></pre>
+<p>DAI compares ARP messages against the Binding Table and stops ARP Spoofing.</p>
+<pre><code>show ip dhcp snooping binding
+show ip arp inspection</code></pre>
+
+<h2 id="s24">24. AAA</h2>
+<p><b>AAA = Authentication + Authorization + Accounting</b></p>
+
+<table>
+<tr><th>Component</th><th>Meaning</th></tr>
+<tr><td>Authentication</td><td>Who are you?</td></tr>
+<tr><td>Authorization</td><td>What are you allowed to do?</td></tr>
+<tr><td>Accounting</td><td>What did you do?</td></tr>
+</table>
+
+<h3>Enabling AAA</h3>
+<pre><code>aaa new-model</code></pre>
+
+<h3>Local AAA</h3>
+<pre><code>username admin privilege 15 secret Cisco@123</code></pre>
+
+<p>To use the Local Database for SSH:</p>
+<pre><code>line vty 0 15
+ login local
+ transport input ssh</code></pre>
+
+<h3>Server-Based AAA</h3>
+<p>Two well-known options:</p>
+<ul>
+<li><b>TACACS+</b> — TCP, port 49, encrypts the entire Payload</li>
+<li><b>RADIUS</b> — UDP, usually port 1812 for Authentication and 1813 for Accounting</li>
+</ul>
+
+<div class="note"><b>Memory aid:</b> Authentication = Who are you? | Authorization = What can you do? | Accounting = What did you do?</div>
+
+<h2 id="s25">Quick CCNA Summary</h2>
+<table>
+<tr><th>Topic</th><th>Key point</th></tr>
+<tr><td>Common commands</td><td>show ip int br, | section, do show, no, ?, and Tab</td></tr>
+<tr><td>Hardening</td><td>enable secret, NTP, Syslog, CDP/LLDP</td></tr>
+<tr><td>SSH</td><td>hostname + domain-name + user + RSA + VTY</td></tr>
+<tr><td>IOS upgrade</td><td>backup → copy tftp: flash: → verify /md5 → boot system → reload</td></tr>
+<tr><td>Switch reset</td><td>write erase (or erase startup-config) + delete flash:vlan.dat + reload</td></tr>
+<tr><td>VLAN</td><td>Access / Trunk / Native VLAN, ROAS or SVI</td></tr>
+<tr><td>STP</td><td>Root Bridge → Root Port → Designated Port</td></tr>
+<tr><td>STP extras</td><td>RSTP, PortFast + BPDU Guard, Root Primary</td></tr>
+<tr><td>EtherChannel</td><td>LACP active/passive, PAgP desirable/auto</td></tr>
+<tr><td>PoE</td><td>power inline auto/static/never + show power inline</td></tr>
+<tr><td>Static Route</td><td>ip route destination mask next-hop</td></tr>
+<tr><td>AD</td><td>Connected 0, Static 1, EIGRP 90, OSPF 110, RIP 120</td></tr>
+<tr><td>OSPF</td><td>Router ID + network + wildcard + area</td></tr>
+<tr><td>OSPF extras</td><td>DR/BDR, Cost, Passive-Interface, Neighbor requirements</td></tr>
+<tr><td>EIGRP</td><td>AS + network + DUAL + Successor</td></tr>
+<tr><td>DHCP</td><td>Excluded-address + Pool + ip helper-address</td></tr>
+<tr><td>ACL</td><td>Standard / Extended + rule order</td></tr>
+<tr><td>NAT</td><td>Static / Dynamic / PAT</td></tr>
+<tr><td>HSRP</td><td>Virtual IP, Active/Standby, Priority + Preempt</td></tr>
+<tr><td>GRE</td><td>Tunnel, no Encryption</td></tr>
+<tr><td>Port Security</td><td>MAC + Maximum + Violation</td></tr>
+<tr><td>L2 security</td><td>DHCP Snooping, DAI</td></tr>
+<tr><td>AAA</td><td>Authentication / Authorization / Accounting</td></tr>
+</table>
+
+</div>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(p=>{const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copy';b.onclick=()=>navigator.clipboard.writeText(p.querySelector('code').innerText.trim()).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)});p.appendChild(b)});
+const L=[...document.querySelectorAll('#toc a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)L.forEach(l=>l.classList.toggle('on',l.hash==='#'+e.target.id))}),{rootMargin:'0px 0px -80% 0px'});
+document.querySelectorAll('h2[id]').forEach(h=>io.observe(h));
+</script>
+</body>
+</html>
